@@ -5,7 +5,7 @@ BASE_URL = "http://5.181.109.28:9090/api/v3"
 
 @allure.feature("Pet")
 class TestPet:
-    allure.title("Попытка удалить несуществующего питомца")
+    @allure.title("Попытка удалить несуществующего питомца")
     def test_delete_nonexistent_pet(self):
         with allure.step("Отправка запроса на удаление несуществующего питомца"):
             response = requests.delete(url=f"{BASE_URL}/pet/9999")
@@ -32,3 +32,16 @@ class TestPet:
 
             with allure.step("Проверка текстового содержимого ответа"):
                 assert response.text == 'Pet not found', "Текст ошибки не совпал с ожидаемым"
+
+
+    @allure.title("Попытка получить несуществующего питомца")
+    def test_getting_nonexistent_pet(self):
+        with allure.step("Отправка запроса на получение несуществующего питомца"):
+            response = requests.get(url=f"{BASE_URL}/pet/9999")
+
+        with allure.step("Проверка статуса ответа"):
+            assert response.status_code == 404, "Статус ответа не совпал с ожидаемым"
+
+        with allure.step("Проверка текстового содержимого ответа"):
+            assert response.text == 'Pet not found'
+
