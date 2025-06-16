@@ -106,4 +106,3 @@ class TestPet:
                 assert response_json['tags'][0]['id'] == payload['tags'][0]['id'], "tags id не совпадает с ожидаемым"
                 assert response_json['tags'][0]['name'] == payload['tags'][0]['name'], "tags name не совпадает с ожидаемым"
                 assert response_json['status'] == payload['status'], "статус питомца не совпадает с ожидаемым"
-                print(response.text)
