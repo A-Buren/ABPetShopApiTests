@@ -157,5 +157,5 @@ class TestPet:
             assert response.status_code == 200, f"Expected 200, but got {response.status_code}"
 
         with allure.step("Отправка запроса на получение информации о питомце по ID"):
-            response = requests.get(url=f"{BASE_URL}/pet/f{pet_id}")
-            assert response.status_code == 400, f"Expected 400, but got {response.status_code}"  # по тест-кейсу ждем 404, а по факту сервак возвращает 400 (оставляю 400, чтобы было зеленым)
+            response = requests.get(url=f"{BASE_URL}/pet/{pet_id}")
+            assert response.status_code == 404, f"Expected 400, but got {response.status_code}"
