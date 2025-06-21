@@ -1,6 +1,7 @@
 from http.client import responses
 import allure
 import jsonschema
+import pytest
 import requests
 
 from .conftest import create_pet
@@ -143,9 +144,10 @@ class TestPet:
         with allure.step("Проверка статуса ответа и валидация JSON-схемы"):
             assert response.status_code == 200, f"Expected 200, but got {response.status_code}"
             assert response_json['id'] == payload['id'], f"Expected {payload['id']}, but got {response_json['id']}"
-            assert response_json['name'] == payload['name'], f"Expected {payload['name']}, but got {response_json['name']}"
-            assert response_json['status'] == payload['status'], f"Expected {payload['status']}, but got {response_json['status']}"
-
+            assert response_json['name'] == payload[
+                'name'], f"Expected {payload['name']}, but got {response_json['name']}"
+            assert response_json['status'] == payload[
+                'status'], f"Expected {payload['status']}, but got {response_json['status']}"
 
     @allure.title("Удаление питомца по ID")
     def test_delete_pet_by_id(self, create_pet):
@@ -159,3 +161,22 @@ class TestPet:
         with allure.step("Отправка запроса на получение информации о питомце по ID"):
             response = requests.get(url=f"{BASE_URL}/pet/{pet_id}")
             assert response.status_code == 404, f"Expected 400, but got {response.status_code}"
+
+    @allure.title("Получение списка питомцев по статусу")
+    @pytest.mark.parametrize(
+        "status, expected_status_code",
+        [
+            ("available", 200),
+            ("pending", 200),
+            ("sold", 200),
+            ("blablabla", 400),
+            ("", 400)
+        ]
+    )
+    def test_get_pet_by_status(self, status, expected_status_code):
+        with allure.step(f"Отправка запроса на получение питомца по статусу {status}"):
+            response = requests.get(url=f"{BASE_URL}/pet/findByStatus", params={"status": status})
+
+        with allure.step("Проверка статуса ответа и формат данных"):
+            assert response.status_code == expected_status_code
+            assert isinstance(response.json(), object) #формат object, тк метод возвращает ошибку в виде объекта.
