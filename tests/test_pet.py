@@ -177,6 +177,14 @@ class TestPet:
         with allure.step(f"Отправка запроса на получение питомца по статусу {status}"):
             response = requests.get(url=f"{BASE_URL}/pet/findByStatus", params={"status": status})
 
-        with allure.step("Проверка статуса ответа и формат данных"):
-            assert response.status_code == expected_status_code
-            assert isinstance(response.json(), object) #формат object, тк метод возвращает ошибку в виде объекта.
+        with allure.step("Проверка статуса ответа"):
+            assert response.status_code == expected_status_code, f"Expected {expected_status_code}, but got {response.status_code}"
+
+        if expected_status_code == 200:
+            with allure.step("Проверяем формат данных"):
+                assert isinstance(response.json(), list)
+
+        else:
+            with allure.step("Проверяем формат ошибки"):
+                assert isinstance(response.json(), dict)
+
