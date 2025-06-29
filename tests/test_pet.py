@@ -3,7 +3,6 @@ import allure
 import jsonschema
 import pytest
 import requests
-
 from .conftest import create_pet
 from .schemas.pet_schema import PET_SCHEMA
 
@@ -187,4 +186,3 @@ class TestPet:
         else:
             with allure.step("Проверяем формат ошибки"):
                 assert isinstance(response.json(), dict)
-
